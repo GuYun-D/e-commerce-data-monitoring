@@ -8,10 +8,18 @@ const app = new koa()
  *          ctx.response 响应对象
  * next：下一个中间件
  */
-app.use((ctx, next) => {
-    console.log(ctx.request.url);
-    ctx.response.body = "hello world"
-})
+// app.use((ctx, next) => {
+//     console.log(ctx.request.url);
+//     ctx.response.body = "hello world"
+// })
+
+/**
+ * 总耗时中间件，第一层中间件
+ */
+const respDurationMiddleware = require("./middleware/koa_respones_duration")
+app.use(respDurationMiddleware)
+
+
 // 监听端口
 app.listen(3000)
 console.log("服务器已启动.....................");
