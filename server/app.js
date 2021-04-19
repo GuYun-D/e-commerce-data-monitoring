@@ -29,6 +29,18 @@ app.use(respDurationMiddleware)
  const respHeaderMiddleware = require("./middleware/koa_respones_header")
  app.use(respHeaderMiddleware)
 
+/**
+ * 业务逻辑中间件
+ * 第三层中间件
+ * 读取文件内容 http: //localhost: 3000/api/seller
+ *             获取请求的路径，拼接文件路径
+ *              获取文件内容
+ * 设置响应体
+ *  ctx.response.body
+ */
+ const respDatarMiddleware = require("./middleware/koa_respones_data")
+ app.use(respDatarMiddleware)
+
 // 监听端口
 app.listen(3000)
 console.log("服务器已启动.....................");
