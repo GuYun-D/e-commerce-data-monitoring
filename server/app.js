@@ -18,7 +18,16 @@ const app = new koa()
  */
 const respDurationMiddleware = require("./middleware/koa_respones_duration")
 app.use(respDurationMiddleware)
-
+/**
+ * 响应头中间件
+ * 第二层中间件
+ * 获取mime类型
+ *      application/json
+ * 响应头设置
+ *      Content-Type: application/json;charset=UTF-8
+ */
+ const respHeaderMiddleware = require("./middleware/koa_respones_header")
+ app.use(respHeaderMiddleware)
 
 // 监听端口
 app.listen(3000)
