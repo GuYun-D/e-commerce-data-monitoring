@@ -2,13 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// 引入全局样式文件
+import './assets/css/global.less'
 
 /**
  * 配置axios
  */
-import axios from "axios"
+import axios from 'axios'
 // 配置请求接口基准路径
-axios.defaults.baseURL = "http://localhost:8000/api"
+axios.defaults.baseURL = 'http://localhost:8000/api'
 // 将axios挂载到vue的原型对象上
 Vue.prototype.$http = axios
 
