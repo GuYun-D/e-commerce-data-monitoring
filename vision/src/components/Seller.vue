@@ -28,6 +28,76 @@ export default {
     // 初始话echarts对象
     initChart() {
       this.chartInstance = this.$echarts.init(this.$refs.seller_ref, 'chalk')
+      // 对图标初始化配置的控制
+      const initOption = {
+        title: {
+          text: '| 商家销售统计',
+          textStyle: {
+            fontSize: 66,
+          },
+          top: 20,
+          left: 20,
+        },
+
+        grid: {
+          top: '20%',
+          left: '3%',
+          right: '6%',
+          bottom: '3%',
+          // 设置坐标轴的位置，是不包括文字的，需要配置属性containLabel: true
+          containLabel: true,
+        },
+
+        xAxis: {
+          type: 'value',
+        },
+        yAxis: {
+          type: 'category',
+        },
+
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line',
+            // 层级设置
+            z: 0,
+            lineStyle: {
+              with: 66,
+              color: '#2d3443',
+            },
+          },
+        },
+
+        series: [
+          {
+            type: 'bar',
+            barWidth: 66,
+            label: {
+              show: true,
+              position: 'right',
+              textStyle: {
+                color: 'white',
+              },
+            },
+            itemStyle: {
+              barBorderRadius: [0, 33, 33, 0],
+              // 指明方向
+              color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  offset: 0,
+                  color: '#5052ee',
+                },
+                {
+                  offset: 1,
+                  color: '#c701ff',
+                },
+              ]),
+            },
+          },
+        ],
+      }
+      this.chartInstance.setOption(initOption)
+
       // 对图标对象进行事件监听
       this.chartInstance.on('mouseover', () => {
         clearInterval(this.timerID)
@@ -67,77 +137,19 @@ export default {
         return item.value
       })
 
-      const option = {
-        title: {
-          text: '| 商家销售统计',
-          textStyle: {
-            fontSize: 66,
-          },
-          top: 20,
-          left: 20,
-        },
-
-        grid: {
-          top: '20%',
-          left: '3%',
-          right: '6%',
-          bottom: '3%',
-          // 设置坐标轴的位置，是不包括文字的，需要配置属性containLabel: true
-          containLabel: true,
-        },
-
-        xAxis: {
-          type: 'value',
-        },
+      const dataOption = {
         yAxis: {
-          type: 'category',
           data: sellerNames,
-        },
-
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'line',
-            // 层级设置
-            z: 0,
-            lineStyle: {
-              with: 66,
-              color: '#2d3443',
-            },
-          },
         },
 
         series: [
           {
-            type: 'bar',
             data: sellerValues,
-            barWidth: 66,
-            label: {
-              show: true,
-              position: 'right',
-              textStyle: {
-                color: 'white',
-              },
-            },
-            itemStyle: {
-              barBorderRadius: [0, 33, 33, 0],
-              // 指明方向
-              color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                {
-                  offset: 0,
-                  color: '#5052ee',
-                },
-                {
-                  offset: 1,
-                  color: '#c701ff',
-                },
-              ]),
-            },
           },
         ],
       }
 
-      this.chartInstance.setOption(option)
+      this.chartInstance.setOption(dataOption)
     },
 
     startInterval() {
