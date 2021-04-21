@@ -20,16 +20,16 @@ export default {
       // 一共有多少页
       totalPage: 0,
       // 定时器id
-      timerID: null
+      timerID: null,
     }
   },
 
   methods: {
     // 初始话echarts对象
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.seller_ref)
+      this.chartInstance = this.$echarts.init(this.$refs.seller_ref, 'chalk')
       // 对图标对象进行事件监听
-      this.chartInstance.on("mouseover", () => {
+      this.chartInstance.on('mouseover', () => {
         clearInterval(this.timerID)
       })
 
@@ -68,6 +68,24 @@ export default {
       })
 
       const option = {
+        title: {
+          text: '| 商家销售统计',
+          textStyle: {
+            fontSize: 66,
+          },
+          top: 20,
+          left: 20,
+        },
+
+        grid: {
+          top: '20%',
+          left: '3%',
+          right: '6%',
+          bottom: '3%',
+          // 设置坐标轴的位置，是不包括文字的，需要配置属性containLabel: true
+          containLabel: true,
+        },
+
         xAxis: {
           type: 'value',
         },
@@ -75,10 +93,46 @@ export default {
           type: 'category',
           data: sellerNames,
         },
+
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line',
+            // 层级设置
+            z: 0,
+            lineStyle: {
+              with: 66,
+              color: '#2d3443',
+            },
+          },
+        },
+
         series: [
           {
             type: 'bar',
             data: sellerValues,
+            barWidth: 66,
+            label: {
+              show: true,
+              position: 'right',
+              textStyle: {
+                color: 'white',
+              },
+            },
+            itemStyle: {
+              barBorderRadius: [0, 33, 33, 0],
+              // 指明方向
+              color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  offset: 0,
+                  color: '#5052ee',
+                },
+                {
+                  offset: 1,
+                  color: '#c701ff',
+                },
+              ]),
+            },
           },
         ],
       }
@@ -87,12 +141,12 @@ export default {
     },
 
     startInterval() {
-      if(this.timerID){
+      if (this.timerID) {
         clearInterval(this.timerID)
       }
       this.timerID = setInterval(() => {
-        this.currentPage ++
-        if(this.currentPage > this.totalPage){
+        this.currentPage++
+        if (this.currentPage > this.totalPage) {
           this.currentPage = 1
         }
         this.updataChart()
@@ -107,9 +161,9 @@ export default {
   },
 
   // 组件被销毁的生命周期
-  destoryed(){
+  destoryed() {
     clearInterval(timerID)
-  }
+  },
 }
 </script>
 
