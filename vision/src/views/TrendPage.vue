@@ -7,15 +7,6 @@
 <script>
 import Trend from '../components/Trend.vue'
 export default {
-  data(){
-    return {
-
-    }
-  },
-  mothods: {
-
-  },
-
   components: {
     trend: Trend
   },
