@@ -32,9 +32,6 @@ export default {
       const initOption = {
         title: {
           text: '| 商家销售统计',
-          textStyle: {
-            fontSize: 66,
-          },
           top: 20,
           left: 20,
         },
@@ -62,7 +59,6 @@ export default {
             // 层级设置
             z: 0,
             lineStyle: {
-              with: 66,
               color: '#2d3443',
             },
           },
@@ -71,7 +67,6 @@ export default {
         series: [
           {
             type: 'bar',
-            barWidth: 66,
             label: {
               show: true,
               position: 'right',
@@ -80,7 +75,6 @@ export default {
               },
             },
             itemStyle: {
-              barBorderRadius: [0, 33, 33, 0],
               // 指明方向
               color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
@@ -164,17 +158,60 @@ export default {
         this.updataChart()
       }, 3000)
     },
+
+    // 屏幕适配函数
+    // 当浏览器的屏幕发生变化时，调用此方法
+    screenAdapter() {
+      // this.$refs.seller_ref.offsetWidth
+      // 当屏幕发生变化时，动态修改文字的大小
+      const titleFontsize = (this.$refs.seller_ref.offsetWidth / 100) * 3.6
+      console.log(titleFontsize)
+
+      const adapterOption = {
+        title: {
+          textStyle: {
+            fontSize: titleFontsize,
+          }
+        },
+
+        tooltip: {
+          axisPointer: {
+            lineStyle: {
+              with: titleFontsize
+            },
+          },
+        },
+
+        series: [
+          {
+            barWidth: titleFontsize,
+            itemStyle: {
+              barBorderRadius: [0, titleFontsize / 2, titleFontsize / 2, 0],
+            },
+          },
+        ],
+      }
+
+      this.chartInstance.setOption(adapterOption)
+
+      // 手动调用图表对象的resize，才能实现效果
+      this.chartInstance.resize()
+    },
   },
 
   // dom加载完毕的生命周期函数
   mounted() {
     this.initChart()
     this.getData()
+    window.addEventListener('resize', this.screenAdapter)
+    // 在我们第一次进入图表的时候，也要调用方法进行适配
+    this.screenAdapter()
   },
 
   // 组件被销毁的生命周期
   destoryed() {
     clearInterval(timerID)
+    window.removeEventListener('resize', screenAdapter)
   },
 }
 </script>
