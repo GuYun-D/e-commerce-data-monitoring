@@ -1,6 +1,13 @@
 <template>
   <div class="com-container">
-    <div class="com-chart" ref="trend_ref">呵呵忽然</div>
+    <div class="title">
+      <span>{{showTitle}}</span>
+      <span class="iconfont" id="title-icon" @click="showChoice=!showChoice">&#xe6eb;</span>
+      <div class="selete_con" v-show="showChoice">
+        <div class="selete_item" v-for="item in seleteTypes" :key="item.key" @click="handleSelect(item.key)">{{item.text}}</div>
+      </div>
+    </div>
+    <div class="com-chart" ref="trend_ref"></div>
   </div>
 </template>
 
@@ -10,6 +17,10 @@ export default {
     return {
       chartsInstance: null,
       allData: null,
+      // 控制标题的显示与隐藏
+      showChoice: false,
+      // 显示数据的类型
+      choiceType: 'map'
     }
   },
 
@@ -65,44 +76,33 @@ export default {
     updataChart() {
       // 定义颜色值
       // 半透明的颜色值
-      const colorArr1 = [
-        'rgba(11, 168, 44, 0.5)',
-        'rgba(44, 110, 255, 0.5)',
-        'rgba(22, 242, 217, 0.5)',
-        'rgba(254, 33, 30, 0.5)',
-        'rgba(250, 105, 0, 0.5)'
-      ]
+      const colorArr1 = ['rgba(11, 168, 44, 0.5)', 'rgba(44, 110, 255, 0.5)', 'rgba(22, 242, 217, 0.5)', 'rgba(254, 33, 30, 0.5)', 'rgba(250, 105, 0, 0.5)']
       // 全透明的颜色值
-      const colorArr2 = [
-        'rgba(11, 168, 44, 0)',
-        'rgba(44, 110, 255, 0)',
-        'rgba(22, 242, 217, 0)',
-        'rgba(254, 33, 30, 0)',
-        'rgba(250, 105, 0, 0)'
-      ]
+      const colorArr2 = ['rgba(11, 168, 44, 0)', 'rgba(44, 110, 255, 0)', 'rgba(22, 242, 217, 0)', 'rgba(254, 33, 30, 0)', 'rgba(250, 105, 0, 0)']
 
       // 获取类目轴数据
       const timerArr = this.allData.common.month
       // y轴数据
-      const valueArr = this.allData.map.data
+      const valueArr = this.allData[this.choiceType].data
       // 数据
       const seriesArr = valueArr.map((item, index) => {
         return {
           name: item.name,
           type: 'line',
           data: item.data,
-          stack: 'map',
+          stack: this.choiceType,
           areaStyle: {
             color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: colorArr1[index]
-              },{
+                color: colorArr1[index],
+              },
+              {
                 offset: 1,
-                color: colorArr2[index]
-              }
-            ])
-          }
+                color: colorArr2[index],
+              },
+            ]),
+          },
         }
       })
       // 图例数据
@@ -130,13 +130,55 @@ export default {
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
+
+    handleSelect(currentType){
+      this.choiceType = currentType
+      this.updataChart()
+      this.showChoice = false
+    }
   },
 
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
   },
+
+  computed: {
+    seleteTypes(){
+      if(!this.allData){
+        return []
+      }else{
+        return this.allData.type.filter(item => {
+          return item.key != this.choiceType
+        })
+      }
+    },
+
+    showTitle(){
+      if(!this.allData){
+        return ''
+      }else{
+        return this.allData[this.choiceType].title
+      }
+    }
+  }
 }
 </script>
 
 <style lang='less' scoped>
+.title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  color: #fff;
+
+  #title-icon {
+    margin-left: 10px;
+    cursor: pointer;
+
+    .selete_item{
+      cursor: pointer;
+    }
+  }
+}
 </style>

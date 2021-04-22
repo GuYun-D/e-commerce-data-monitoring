@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 // 引入全局样式文件
 import './assets/css/global.less'
+// 引入字体文件
+import '../src/assets/font/iconfont.css'
 
 /**
  * 配置axios
