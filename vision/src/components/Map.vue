@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     async initCharts() {
-      this.chartsInstance = this.$echarts.init(this.$refs.map_ref)
+      this.chartsInstance = this.$echarts.init(this.$refs.map_ref, 'chalk')
       // 获取中国地图矢量数据
       // axios基准路径已经配置，不能使用axios，所以在当前页面在引入axios
       const ret = await axios.get('http://localhost:8080/static/map/china.json')
@@ -25,9 +25,26 @@ export default {
       this.$echarts.registerMap('china', ret.data)
 
       const initOption = {
+        title: {
+          text: '| 商家分布',
+          left: 20,
+          top: 20
+        },
         geo: {
           type: 'map',
-          map: 'china'
+          map: 'china',
+          top: '5%',
+          bottom: '5%',
+          itemStyle: {
+            areaColor: '#2e728f',
+            borderColor: '#333'
+          }
+        },
+        legend: {
+          left: '5%',
+          bottom: '5%',
+          // 将图例排列方式改为竖直
+          orient: 'vertical'
         }
       }
       this.chartsInstance.setOption(initOption)
@@ -52,7 +69,11 @@ export default {
           type: 'effectScatter',
           name: item.name,
           data: item.children,
-          coordinateSystem: 'geo'
+          coordinateSystem: 'geo',
+          rippleEffect: {
+            scale: 5,
+            brushType: 'stroke'
+          }
         }
       })
 
