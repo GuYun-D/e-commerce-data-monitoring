@@ -21,7 +21,6 @@ export default {
       // 获取中国地图矢量数据
       // axios基准路径已经配置，不能使用axios，所以在当前页面在引入axios
       const ret = await axios.get('http://localhost:8080/static/map/china.json')
-      console.log(ret)
       // 注册地图
       this.$echarts.registerMap('china', ret.data)
 
@@ -34,12 +33,35 @@ export default {
       this.chartsInstance.setOption(initOption)
     },
     async getData() {
-      const { data: ret } = await this.$http.get()
+      const { data: ret } = await this.$http.get('/map')
       this.allData = ret
       this.updataChart()
     },
     updataChart() {
-      const dataOption = {}
+      // 图例数据
+      const legendArr = this.allData.map(item => {
+        return item.name
+      })
+
+      // 处理数据
+      const seriesArr = this.allData.map(item => {
+        // return的对象就是代表一个类别的所有散点数据
+        // 类别：ret中三个数组，分别代表三个类别，黄金，白金，钻石
+        // 如果想要在地图中显示散点数据，需要给散点图表添加配置：coordinateSystem: 'geo'
+        return {
+          type: 'effectScatter',
+          name: item.name,
+          data: item.children,
+          coordinateSystem: 'geo'
+        }
+      })
+
+      const dataOption = {
+        series: seriesArr,
+        legend: {
+          data: legendArr
+        }
+      }
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
