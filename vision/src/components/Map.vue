@@ -86,7 +86,23 @@ export default {
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
-      const adapteeOption = {}
+      const titleFontSize = this.$refs.map_ref.offsetWidth / 100 * 3.6
+      const adapteeOption = {
+        title: {
+          textStyle: {
+            fontSize: titleFontSize
+          }
+        },
+
+        legend: {
+          itemWidth : titleFontSize / 2,
+          itemHeight : titleFontSize / 2,
+          itemGap: titleFontSize / 2,
+          textStyle: {
+            fontSize: titleFontSize / 2
+          }
+        }
+      }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
