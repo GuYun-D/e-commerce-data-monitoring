@@ -128,7 +128,23 @@ export default {
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
-      const adapteeOption = {}
+      const titleFontSize = this.$refs.rank_ref.offsetWidth / 100 * 3.6
+      const adapteeOption = {
+        title: {
+          textStyle: {
+            fontSize: titleFontSize
+          }
+        },
+
+        series: [
+          {
+            barWidth: titleFontSize,
+            itemStyle: {
+              barBorderRadius: [titleFontSize / 2, titleFontSize / 2, 0, 0]
+            }
+          }
+        ]
+      }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
