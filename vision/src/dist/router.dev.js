@@ -17,6 +17,8 @@ var _MapPage = _interopRequireDefault(require("./views/MapPage.vue"));
 
 var _RankPage = _interopRequireDefault(require("./views/RankPage.vue"));
 
+var _HotPage = _interopRequireDefault(require("./views/HotPage.vue"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 _vue["default"].use(_vueRouter["default"]);
@@ -33,6 +35,9 @@ var routes = [{
 }, {
   path: '/rankpage',
   component: _RankPage["default"]
+}, {
+  path: '/hotpage',
+  component: _HotPage["default"]
 }];
 var router = new _vueRouter["default"]({
   routes: routes
