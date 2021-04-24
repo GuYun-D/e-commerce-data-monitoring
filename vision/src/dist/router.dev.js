@@ -15,6 +15,8 @@ var _TrendPage = _interopRequireDefault(require("./views/TrendPage.vue"));
 
 var _MapPage = _interopRequireDefault(require("./views/MapPage.vue"));
 
+var _RankPage = _interopRequireDefault(require("./views/RankPage.vue"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 _vue["default"].use(_vueRouter["default"]);
@@ -28,6 +30,9 @@ var routes = [{
 }, {
   path: '/mappage',
   component: _MapPage["default"]
+}, {
+  path: '/rankpage',
+  component: _RankPage["default"]
 }];
 var router = new _vueRouter["default"]({
   routes: routes
