@@ -10,6 +10,11 @@ export default {
     return {
       chartsInstance: null,
       allData: null,
+      // 控制图表平行移动
+      startValue: 0,
+      endValue: 9,
+      // 定时器
+      timerId: '',
     }
   },
   methods: {
@@ -46,6 +51,12 @@ export default {
       }
 
       this.chartsInstance.setOption(initOption)
+      this.chartsInstance.on('mouseover', function () {
+        clearInterval(this.timerId)
+      })
+      this.chartsInstance.on('mouseout', () => {
+        this.startInterval()
+      })
     },
     async getData() {
       const { data: ret } = await this.$http.get('rank')
@@ -55,6 +66,7 @@ export default {
         return b.value - a.value
       })
       this.updataChart()
+      this.startInterval()
     },
     updataChart() {
       // 颜色渐变的数组
@@ -75,6 +87,12 @@ export default {
       console.log(valueArr)
 
       const dataOption = {
+        // 区域缩放，实现动画平移
+        dataZoom: {
+          show: false,
+          startValue: this.startValue,
+          endValue: this.endValue,
+        },
         xAxis: {
           data: provinceArr,
         },
@@ -96,10 +114,11 @@ export default {
                   {
                     offset: 0,
                     color: targetColorArr[0],
-                  }, {
+                  },
+                  {
                     offset: 1,
-                    color: targetColorArr[1]
-                  }
+                    color: targetColorArr[1],
+                  },
                 ])
               },
             },
@@ -113,6 +132,22 @@ export default {
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
+
+    // 控制图表移动函数
+    startInterval() {
+      if (this.timerId) {
+        clearInterval(this.timerId)
+      }
+      this.timerId = setInterval(() => {
+        this.startValue++
+        this.endValue++
+        if (this.endValue > this.allData.length - 1) {
+          this.startValue = 0
+          this.endValue = 9
+        }
+        this.updataChart()
+      }, 2000)
+    },
   },
   mounted() {
     this.initCharts()
@@ -122,6 +157,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
+    clearInterval(timerId)
   },
 }
 </script>
