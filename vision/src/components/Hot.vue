@@ -3,7 +3,7 @@
     <div class="com-chart" ref="hot_ref"></div>
     <span class="iconfont arr-left" @click="toLeft">&#xe6ef;</span>
     <span class="iconfont arr-right" @click="toRight">&#xe6ed;</span>
-    <span class="cat-name">{{cateName}}</span>
+    <span class="cat-name">{{ cateName }}</span>
   </div>
 </template>
 
@@ -19,13 +19,56 @@ export default {
   },
   methods: {
     initCharts() {
-      this.chartsInstance = this.$echarts.init(this.$refs.hot_ref)
+      this.chartsInstance = this.$echarts.init(this.$refs.hot_ref, 'chalk')
       const initOption = {
         series: [
           {
             type: 'pie',
+            label: {
+              show: false
+            },
+            emphasis: {
+              label: {
+                show: true
+              },
+              labelLine: {
+                show: false
+              }
+            }
           },
         ],
+
+        title: {
+          text: '| 热销商品的占比',
+          left: 20,
+          top: 20
+        },
+
+        legend: {
+          top: '5%',
+          icon: 'circle'
+        },
+
+        tooltip: {
+          show: true,
+          formatter: function(arg){
+            // 得到二级分类中的三级分类
+            const thirdCategory = arg.data.children
+            // 计算出所有三级分类的数值总和
+            let total = 0
+            thirdCategory.forEach(item => {
+              total += item.value
+            });
+            let retStr = ''
+            thirdCategory.forEach(item => {
+              retStr += `
+                ${item.name}: ${parseInt(item.value / total * 100) + '%'}
+                <br />
+              `
+            })
+            return retStr
+          } 
+        }
       }
       this.chartsInstance.setOption(initOption)
     },
@@ -44,6 +87,8 @@ export default {
         return {
           name: item.name,
           value: item.value,
+          // 为了在tooltip中得到这个三级分类
+          children: item.children
         }
       })
       // 图例数据
@@ -99,14 +144,14 @@ export default {
   },
 
   computed: {
-    cateName(){
-      if(!this.allData){
+    cateName() {
+      if (!this.allData) {
         return ''
-      }else{
+      } else {
         return this.allData[this.currentIndex].name
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -118,19 +163,26 @@ export default {
   cursor: pointer;
 }
 
+.title {
+  color: white;
+}
+
 .arr-left {
   left: 10%;
   .arrInit();
+  .title();
 }
 
 .arr-right {
   right: 10%;
   .arrInit();
+  .title();
 }
 
-.cat-name{
+.cat-name {
   position: absolute;
   left: 80%;
   bottom: 20px;
+  .title();
 }
 </style>
