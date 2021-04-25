@@ -119,7 +119,53 @@ export default {
     },
     screenAdapter() {
       const titleFontSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6
-      const adapteeOption = {}
+      const innerRadius = this.titleFontSize * 2
+      const outRadius = innerRadius * 1.125
+
+      const adapteeOption = {
+        title: {
+          textStyle: {
+            fontSize: titleFontSize
+          }
+        },
+
+        series: [
+          {
+            type: 'pie',
+            radius: [outRadius, innerRadius],
+            label: {
+              fontSize: titleFontSize / 2
+            }
+          },{
+            type: 'pie',
+
+            radius: [outRadius, innerRadius],
+            label: {
+              fontSize: titleFontSize / 2
+            }
+          }, {
+            type: 'pie',
+
+            radius: [outRadius, innerRadius],
+            label: {
+              fontSize: titleFontSize / 2
+            }
+          }, {
+            type: 'pie',
+
+            radius: [outRadius, innerRadius],
+            label: {
+              fontSize: titleFontSize / 2
+            }
+          }, {
+            type: 'pie',
+            radius: [outRadius, innerRadius],
+            label: {
+              fontSize: titleFontSize / 2
+            }
+          }
+        ]
+      }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
