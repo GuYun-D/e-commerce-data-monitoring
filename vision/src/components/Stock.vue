@@ -10,6 +10,10 @@ export default {
     return {
       chartsInstance: null,
       allData: null,
+      // 当前数据显式的页数
+      currentIndex: 0,
+      // 定时器的id
+      timerId: ''
     }
   },
   methods: {
@@ -23,12 +27,22 @@ export default {
         },
       }
       this.chartsInstance.setOption(initOption)
+
+      // 图表事件监听
+      this.chartsInstance.on('mouseover', () => {
+        clearInterval(this.timerId)
+      })
+
+      this.chartsInstance.on('mouseout', () => {
+        this.startInterval()
+      })
     },
     async getData() {
       const { data: ret } = await this.$http.get('stock')
       this.allData = ret
       // console.log(ret);
       this.updataChart()
+      this.startInterval()
     },
     updataChart() {
       // 饼图中心点坐标
@@ -50,7 +64,10 @@ export default {
       ]
 
       // 处理数据
-      const showData = this.allData.slice(0, 5)
+      // 控制数据的显示
+      const start = this.currentIndex * 5
+      const end = (this.currentIndex + 1) * 5 
+      const showData = this.allData.slice(start, end)
       const seriesArr = showData.map((item, index) => {
         return {
           type: 'pie',
@@ -101,10 +118,24 @@ export default {
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
+      const titleFontSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6
       const adapteeOption = {}
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
+
+    startInterval(){
+      if(this.timerId){
+        clearInterval(this.timerId)
+      }
+      this.timerId = setInterval(() => {
+        this.currentIndex ++
+        if(this.currentIndex > 1 ){
+          this.currentIndex = 0
+        }
+        this.updataChart()
+      }, 5000)
+    }
   },
   mounted() {
     this.initCharts()
@@ -114,6 +145,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
+    clearInterval(this.timerId)
   },
 }
 </script>
