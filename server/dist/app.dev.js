@@ -1,6 +1,9 @@
-const koa = require("koa")
-// 创建koa对象
-const app = new koa()
+"use strict";
+
+var koa = require("koa"); // 创建koa对象
+
+
+var app = new koa();
 /**
  * 编写响应函数（中间件）
  * ctx: 上下文，web容器
@@ -16,8 +19,10 @@ const app = new koa()
 /**
  * 总耗时中间件，第一层中间件
  */
-const respDurationMiddleware = require("./middleware/koa_respones_duration")
-app.use(respDurationMiddleware)
+
+var respDurationMiddleware = require("./middleware/koa_respones_duration");
+
+app.use(respDurationMiddleware);
 /**
  * 响应头中间件
  * 第二层中间件
@@ -26,9 +31,10 @@ app.use(respDurationMiddleware)
  * 响应头设置
  *      Content-Type: application/json;charset=UTF-8
  */
- const respHeaderMiddleware = require("./middleware/koa_respones_header")
- app.use(respHeaderMiddleware)
 
+var respHeaderMiddleware = require("./middleware/koa_respones_header");
+
+app.use(respHeaderMiddleware);
 /**
  * 业务逻辑中间件
  * 第三层中间件
@@ -38,18 +44,19 @@ app.use(respDurationMiddleware)
  * 设置响应体
  *  ctx.response.body
  */
- const respDatarMiddleware = require("./middleware/koa_respones_data")
- app.use(respDatarMiddleware)
 
-// 监听端口
-app.listen(3000)
+var respDatarMiddleware = require("./middleware/koa_respones_data");
+
+app.use(respDatarMiddleware); // 监听端口
+
+app.listen(3000);
 console.log("服务器已启动.....................");
-
-
 /**
  * 引入websocket
  */
-const webSocketService = require('./service/web_socket_service')
-// 开启服务端的监听，监听客户端的链接
+
+var webSocketService = require('./service/web_socket_service'); // 开启服务端的监听，监听客户端的链接
 // 当某一个客户端连接成功之后，就会对这个客户端进行message事件监听
-webSocketService.listen()
+
+
+webSocketService.listen();
