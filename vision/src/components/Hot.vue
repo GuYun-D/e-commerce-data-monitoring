@@ -1,9 +1,9 @@
 <template>
   <div class="com-container">
     <div class="com-chart" ref="hot_ref"></div>
-    <span class="iconfont arr-left" @click="toLeft">&#xe6ef;</span>
-    <span class="iconfont arr-right" @click="toRight">&#xe6ed;</span>
-    <span class="cat-name">{{ cateName }}</span>
+    <span :style="comStyle" class="iconfont arr-left" @click="toLeft">&#xe6ef;</span>
+    <span :style="comStyle" class="iconfont arr-right" @click="toRight">&#xe6ed;</span>
+    <span :style="comStyle" class="cat-name">{{ cateName }}</span>
   </div>
 </template>
 
@@ -15,6 +15,9 @@ export default {
       allData: null,
       // 控制数据切换,一级分类数据
       currentIndex: 0,
+
+      // 文字大小
+      titleFontSize: 0,
     }
   },
   methods: {
@@ -25,50 +28,50 @@ export default {
           {
             type: 'pie',
             label: {
-              show: false
+              show: false,
             },
             emphasis: {
               label: {
-                show: true
+                show: true,
               },
               labelLine: {
-                show: false
-              }
-            }
+                show: false,
+              },
+            },
           },
         ],
 
         title: {
           text: '| 热销商品的占比',
           left: 20,
-          top: 20
+          top: 20,
         },
 
         legend: {
-          top: '5%',
-          icon: 'circle'
+          top: '15%',
+          icon: 'circle',
         },
 
         tooltip: {
           show: true,
-          formatter: function(arg){
+          formatter: function (arg) {
             // 得到二级分类中的三级分类
             const thirdCategory = arg.data.children
             // 计算出所有三级分类的数值总和
             let total = 0
-            thirdCategory.forEach(item => {
+            thirdCategory.forEach((item) => {
               total += item.value
-            });
+            })
             let retStr = ''
-            thirdCategory.forEach(item => {
+            thirdCategory.forEach((item) => {
               retStr += `
-                ${item.name}: ${parseInt(item.value / total * 100) + '%'}
+                ${item.name}: ${parseInt((item.value / total) * 100) + '%'}
                 <br />
               `
             })
             return retStr
-          } 
-        }
+          },
+        },
       }
       this.chartsInstance.setOption(initOption)
     },
@@ -88,7 +91,7 @@ export default {
           name: item.name,
           value: item.value,
           // 为了在tooltip中得到这个三级分类
-          children: item.children
+          children: item.children,
         }
       })
       // 图例数据
@@ -111,7 +114,30 @@ export default {
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
-      const adapteeOption = {}
+      this.titleFontSize = (this.$refs.hot_ref.offsetWidth / 100) * 3.6
+      const adapteeOption = {
+        title: {
+          textStyle: {
+            fontSize: this.titleFontSize,
+          },
+        },
+
+        series: [
+          {
+            radius: this.titleFontSize * 4.5,
+            center: ['50%', '60%'],
+          },
+        ],
+
+        legend: {
+          itemWidth: this.titleFontSize / 2,
+          itemHeight: this.titleFontSize / 2,
+          itemGap: this.titleFontSize / 2,
+          textStyle: {
+            fontSize: this.titleFontSize / 2,
+          },
+        },
+      }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
     },
@@ -149,6 +175,12 @@ export default {
         return ''
       } else {
         return this.allData[this.currentIndex].name
+      }
+    },
+
+    comStyle() {
+      return {
+        fontSize: this.titleFontSize + 'px',
       }
     },
   },
