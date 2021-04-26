@@ -28,7 +28,7 @@ export default {
 
   mounted() {
     this.initCharts()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
   },
@@ -38,10 +38,10 @@ export default {
       this.chartsInstance = this.$echarts.init(this.$refs.trend_ref, 'chalk')
       // 向后端发送数据
       this.$socket.send({
-        action: 'getData',
-        socketType: 'trendData',
-        chartName: 'trend',
-        value: '',
+        "action": 'getData',
+        "socketType": 'trendData',
+        "chartName": 'trend',
+        "value": ''
       })
       const initOption = {
         xAxis: {

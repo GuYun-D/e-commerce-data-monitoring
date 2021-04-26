@@ -19,6 +19,12 @@ export default {
   methods: {
     async initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.map_ref, 'chalk')
+      this.$socket.send({
+        "action": 'getData',
+        "socketType": 'mapData',
+        "chartName": 'map',
+        "value": ''
+      })
       // 获取中国地图矢量数据
       // axios基准路径已经配置，不能使用axios，所以在当前页面在引入axios
       const ret = await axios.get('http://localhost:8080/static/map/china.json')
@@ -72,8 +78,8 @@ export default {
         this.chartsInstance.setOption(changeOption)
       })
     },
-    async getData() {
-      const { data: ret } = await this.$http.get('/map')
+    getData(ret) {
+      // const { data: ret } = await this.$http.get('/map')
       this.allData = ret
       this.updataChart()
     },
@@ -143,12 +149,17 @@ export default {
   },
   mounted() {
     this.initCharts()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
+    this.$socket.unregisterCallBack('mapData')
+  },
+
+  created() {
+    this.$socket.registerCallBack('mapData', this.getData)
   },
 }
 </script>

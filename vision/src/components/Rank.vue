@@ -20,6 +20,12 @@ export default {
   methods: {
     initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.rank_ref, 'chalk')
+      this.$socket.send({
+        action: 'getData',
+        socketType: 'rankData',
+        chartName: 'rank',
+        value: '',
+      })
       const initOption = {
         title: {
           text: '| 地区销售排行',
@@ -58,8 +64,8 @@ export default {
         this.startInterval()
       })
     },
-    async getData() {
-      const { data: ret } = await this.$http.get('rank')
+    getData(ret) {
+      // const { data: ret } = await this.$http.get('rank')
       this.allData = ret
       // 对元素进行排序，从大到小
       this.allData.sort((a, b) => {
@@ -128,22 +134,22 @@ export default {
       this.chartsInstance.setOption(dataOption)
     },
     screenAdapter() {
-      const titleFontSize = this.$refs.rank_ref.offsetWidth / 100 * 3.6
+      const titleFontSize = (this.$refs.rank_ref.offsetWidth / 100) * 3.6
       const adapteeOption = {
         title: {
           textStyle: {
-            fontSize: titleFontSize
-          }
+            fontSize: titleFontSize,
+          },
         },
 
         series: [
           {
             barWidth: titleFontSize,
             itemStyle: {
-              barBorderRadius: [titleFontSize / 2, titleFontSize / 2, 0, 0]
-            }
-          }
-        ]
+              barBorderRadius: [titleFontSize / 2, titleFontSize / 2, 0, 0],
+            },
+          },
+        ],
       }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
@@ -167,13 +173,18 @@ export default {
   },
   mounted() {
     this.initCharts()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
     clearInterval(timerId)
+    this.$socket.unregisterCallBack('rankData')
+  },
+
+  created() {
+    this.$socket.registerCallBack('rankData', this.getData)
   },
 }
 </script>

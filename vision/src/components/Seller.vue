@@ -28,6 +28,12 @@ export default {
     // 初始话echarts对象
     initChart() {
       this.chartInstance = this.$echarts.init(this.$refs.seller_ref, 'chalk')
+      this.$socket.send({
+        "action": 'getData',
+        "socketType": 'sellerData',
+        "chartName": 'seller',
+        "value": ''
+      })
       // 对图标初始化配置的控制
       const initOption = {
         title: {
@@ -102,9 +108,9 @@ export default {
       })
     },
     // 获取数据
-    async getData() {
+    getData(ret) {
       // http://localhost: 3000/api/seller
-      const { data: ret } = await this.$http.get('/seller')
+      // const { data: ret } = await this.$http.get('/seller')
       console.log(ret)
       this.allData = ret
       // 对数组排序
@@ -202,7 +208,7 @@ export default {
   // dom加载完毕的生命周期函数
   mounted() {
     this.initChart()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     // 在我们第一次进入图表的时候，也要调用方法进行适配
     this.screenAdapter()
@@ -212,7 +218,12 @@ export default {
   destoryed() {
     clearInterval(timerID)
     window.removeEventListener('resize', screenAdapter)
+    this.$socket.unregisterCallBack('sellerData')
   },
+
+  created(){
+    this.$socket.registerCallBack('sellerData', this.getData)
+  }
 }
 </script>
 

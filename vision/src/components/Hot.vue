@@ -23,6 +23,12 @@ export default {
   methods: {
     initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.hot_ref, 'chalk')
+      this.$socket.send({
+        "action": 'getData',
+        "socketType": 'hotproductData',
+        "chartName": 'hotproduct',
+        "value": ''
+      })
       const initOption = {
         series: [
           {
@@ -75,8 +81,8 @@ export default {
       }
       this.chartsInstance.setOption(initOption)
     },
-    async getData() {
-      const { data: ret } = await this.$http.get('/hotproduct')
+    getData(ret) {
+      // const { data: ret } = await this.$http.get('/hotproduct')
       this.allData = ret
       // console.log(ret)
       this.updataChart()
@@ -161,7 +167,7 @@ export default {
   },
   mounted() {
     this.initCharts()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
   },
@@ -183,6 +189,10 @@ export default {
         fontSize: this.titleFontSize + 'px',
       }
     },
+  },
+
+  created() {
+    this.$socket.registerCallBack('hotproductData', this.getData)
   },
 }
 </script>

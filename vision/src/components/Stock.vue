@@ -19,6 +19,12 @@ export default {
   methods: {
     initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.stock_ref, 'chalk')
+      this.$socket.send({
+        "action": 'getData',
+        "socketType": 'stockData',
+        "chartName": 'stock',
+        "value": ''
+      })
       const initOption = {
         title: {
           text: '|   库存和销量分析',
@@ -37,8 +43,8 @@ export default {
         this.startInterval()
       })
     },
-    async getData() {
-      const { data: ret } = await this.$http.get('stock')
+    getData(ret) {
+      // const { data: ret } = await this.$http.get('stock')
       this.allData = ret
       // console.log(ret);
       this.updataChart()
@@ -185,14 +191,19 @@ export default {
   },
   mounted() {
     this.initCharts()
-    this.getData()
+    // this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
     clearInterval(this.timerId)
+    this.$socket.unregisterCallBack('stockData')
   },
+
+  created(){
+    this.$socket.registerCallBack('stockData', this.getData)
+  }
 }
 </script>
 

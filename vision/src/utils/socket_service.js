@@ -23,6 +23,12 @@ export default class SocketService {
   // 存储回调函数
   callbackMapping = {}
 
+  // 标识websocket是否连接成功了
+  connected = false
+
+  // 调用send方法的次数
+  sendRetryCount = 0
+
   // 定义链接服务器的代码
   connect() {
     // 连接服务器
@@ -34,11 +40,21 @@ export default class SocketService {
     // 连接成功事件
     this.ws.onopen = () => {
       console.log("连接服务成功");
+      // 说明链接成功，将connected变回true
+      this.connected = true
+      // 连接成功将connectRetryCount置0
+      this.connectRetryCount = 0
     }
 
     // 连接失败
+    /**
+     * closed事件的调用场景
+     * - 连接服务器失败
+     * - 当链接成功之后服务器关闭也会调用
+     */
     this.ws.onclosed = () => {
       console.log("链接服务器失败");
+      this.connected = false
     }
 
     // 得到服务端发送过来的数据
@@ -52,16 +68,16 @@ export default class SocketService {
       // 得到回调函数的标识
       const socketType = recvData.socketType
       // 判断回调函数是否存在
-      if(this.callbackMapping[socketType]){
+      if (this.callbackMapping[socketType]) {
         const action = recvData.action
-        if(action === 'getData'){
+        if (action === 'getData') {
           // 在后端处理时，getData是获取数据，所以recvData中有图表数据
           const realData = JSON.parse(recvData.data)
           // 调用回调函数，传递数据
           this.callbackMapping[socketType].call(this, realData)
-        } else if(action === 'fullScreen'){
+        } else if (action === 'fullScreen') {
 
-        } else if(action === 'themeChange'){
+        } else if (action === 'themeChange') {
 
         }
       }
@@ -79,7 +95,16 @@ export default class SocketService {
   }
 
   // 发送数据的方法
-  send(data){
-    this.ws.send(JSON.stringify(data))
+  send(data) {
+    if (this.connected) {
+      this.sendRetryCount = 0
+      this.ws.send(JSON.stringify(data))
+    } else {
+      this.sendRetryCount ++
+      // 延时重新发送
+      setTimeout(() => {
+        this.send(data)
+      }, 500 * this.sendRetryCount)
+    }
   }
 }
