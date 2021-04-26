@@ -7,6 +7,11 @@ import './assets/css/global.less'
 // 引入字体文件
 import '../src/assets/font/iconfont.css'
 
+// 引入socketService
+import SocketService from './utils/socket_service'
+// 对服务器的websocket进行连接
+SocketService.Instance.connect()
+
 /**
  * 配置axios
  */
