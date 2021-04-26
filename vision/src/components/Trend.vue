@@ -36,6 +36,13 @@ export default {
   methods: {
     initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.trend_ref, 'chalk')
+      // 向后端发送数据
+      this.$socket.send({
+        action: 'getData',
+        socketType: 'trendData',
+        chartName: 'trend',
+        value: '',
+      })
       const initOption = {
         xAxis: {
           type: 'category',
@@ -68,8 +75,11 @@ export default {
       this.chartsInstance.setOption(initOption)
     },
 
-    async getData() {
-      const { data: ret } = await this.$http.get('trend')
+    /**
+     * ret 就是服务端发送给客户端的图表数据
+     */
+     getData(ret) {
+      // const { data: ret } = await this.$http.get('trend')
       console.log(ret)
       this.allData = ret
       this.updataChart()
@@ -153,6 +163,8 @@ export default {
 
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
+    // 销毁回调函数
+    this.$socket.unregisterCallBack('trendData')
   },
 
   computed: {
@@ -187,6 +199,11 @@ export default {
         marginLeft: this.titleFontSize - 20 + 'px',
       }
     },
+  },
+
+  // 注册回调函数
+  created() {
+    this.$socket.registerCallBack('trendData', this.getData)
   },
 }
 </script>
