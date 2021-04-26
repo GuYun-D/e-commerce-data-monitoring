@@ -11,6 +11,11 @@ import '../src/assets/font/iconfont.css'
 import SocketService from './utils/socket_service'
 // 对服务器的websocket进行连接
 SocketService.Instance.connect()
+/**
+ * 将SocketService挂载到原型上
+ * 组件要调用registerCallBack,unregisterCallBack,send这三个方法，所以将Instance挂载到原型
+ */
+Vue.prototype.$socket = SocketService.Instance
 
 /**
  * 配置axios
