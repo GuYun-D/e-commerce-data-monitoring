@@ -78,7 +78,6 @@ export default {
         return {
           type: 'pie',
           // 变成圆环图
-          radius: [110, 100],
           center: centerArr[index],
           hoverAnimation: false,
           labelLine: {
@@ -91,7 +90,7 @@ export default {
           data: [
             {
               // 销量
-              name: item.name + '\n' + item.sales,
+              name: item.name + '\n' + '\n' + item.sales,
               value: item.sales,
               itemStyle: {
                 color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
@@ -125,7 +124,7 @@ export default {
     },
     screenAdapter() {
       const titleFontSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6
-      const innerRadius = this.titleFontSize * 2
+      const innerRadius = titleFontSize * 2.8
       const outRadius = innerRadius * 1.125
 
       const adapteeOption = {
