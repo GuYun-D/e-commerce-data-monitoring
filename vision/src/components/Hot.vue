@@ -84,7 +84,6 @@ export default {
     getData(ret) {
       // const { data: ret } = await this.$http.get('/hotproduct')
       this.allData = ret
-      // console.log(ret)
       this.updataChart()
     },
     updataChart() {

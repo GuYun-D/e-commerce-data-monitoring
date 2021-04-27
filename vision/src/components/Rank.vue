@@ -85,12 +85,12 @@ export default {
       const provinceArr = this.allData.map((item) => {
         return item.name
       })
-      console.log(provinceArr)
+      // console.log(provinceArr)
       // 所有省份对应的数据
       const valueArr = this.allData.map((item) => {
         return item.value
       })
-      console.log(valueArr)
+      // console.log(valueArr)
 
       const dataOption = {
         // 区域缩放，实现动画平移

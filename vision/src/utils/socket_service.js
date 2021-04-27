@@ -59,7 +59,7 @@ export default class SocketService {
 
     // 得到服务端发送过来的数据
     this.ws.onmessage = msg => {
-      console.log("服务端发送数据了");
+      // console.log("服务端发送数据了");
       // 服务端发送过来的原始数据是在msg中的data
       // console.log(msg.data);
 
@@ -76,7 +76,8 @@ export default class SocketService {
           // 调用回调函数，传递数据
           this.callbackMapping[socketType].call(this, realData)
         } else if (action === 'fullScreen') {
-
+          // 执行注册的回调函数
+          this.callbackMapping[socketType].call(this, recvData)
         } else if (action === 'themeChange') {
 
         }
