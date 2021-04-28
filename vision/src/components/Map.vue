@@ -22,10 +22,10 @@ export default {
     async initCharts() {
       this.chartsInstance = this.$echarts.init(this.$refs.map_ref, this.theme)
       this.$socket.send({
-        "action": 'getData',
-        "socketType": 'mapData',
-        "chartName": 'map',
-        "value": ''
+        'action': 'getData',
+        'socketType': 'mapData',
+        'chartName': 'map',
+        'value': ''
       })
       // 获取中国地图矢量数据
       // axios基准路径已经配置，不能使用axios，所以在当前页面在引入axios
@@ -37,7 +37,7 @@ export default {
         title: {
           text: '| 商家分布',
           left: 20,
-          top: 20,
+          top: 20
         },
         geo: {
           type: 'map',
@@ -46,15 +46,15 @@ export default {
           bottom: '5%',
           itemStyle: {
             areaColor: '#2e728f',
-            borderColor: '#333',
-          },
+            borderColor: '#333'
+          }
         },
         legend: {
           left: '5%',
           bottom: '5%',
           // 将图例排列方式改为竖直
-          orient: 'vertical',
-        },
+          orient: 'vertical'
+        }
       }
       this.chartsInstance.setOption(initOption)
 
@@ -74,8 +74,8 @@ export default {
         // 切换地图
         const changeOption = {
           geo: {
-            map: proovince.key,
-          },
+            map: proovince.key
+          }
         }
         this.chartsInstance.setOption(changeOption)
       })
@@ -103,16 +103,16 @@ export default {
           coordinateSystem: 'geo',
           rippleEffect: {
             scale: 5,
-            brushType: 'stroke',
-          },
+            brushType: 'stroke'
+          }
         }
       })
 
       const dataOption = {
         series: seriesArr,
         legend: {
-          data: legendArr,
-        },
+          data: legendArr
+        }
       }
       this.chartsInstance.setOption(dataOption)
     },
@@ -121,8 +121,8 @@ export default {
       const adapteeOption = {
         title: {
           textStyle: {
-            fontSize: titleFontSize,
-          },
+            fontSize: titleFontSize
+          }
         },
 
         legend: {
@@ -130,9 +130,9 @@ export default {
           itemHeight: titleFontSize / 2,
           itemGap: titleFontSize / 2,
           textStyle: {
-            fontSize: titleFontSize / 2,
-          },
-        },
+            fontSize: titleFontSize / 2
+          }
+        }
       }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
@@ -142,12 +142,12 @@ export default {
     reverMap() {
       const reverOption = {
         geo: {
-          map: 'china',
-        },
+          map: 'china'
+        }
       }
 
       this.chartsInstance.setOption(reverOption)
-    },
+    }
   },
   mounted() {
     this.initCharts()
@@ -165,7 +165,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['theme']),
+    ...mapState(['theme'])
   },
 
   watch: {
@@ -178,10 +178,11 @@ export default {
       this.screenAdapter()
       // 更新图表
       this.updataChart()
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style lang='less' scoped>
+
 </style>

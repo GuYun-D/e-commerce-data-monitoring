@@ -83,7 +83,6 @@ export default {
      */
      getData(ret) {
       // const { data: ret } = await this.$http.get('trend')
-      console.log(ret)
       this.allData = ret
       this.updataChart()
     },
@@ -124,7 +123,6 @@ export default {
       const lengedArr = valueArr.map((item) => {
         return item.name
       })
-      console.log(lengedArr)
 
       const dataOption = {
         xAxis: {

@@ -11,7 +11,6 @@ module.exports.listen = () => {
   wss.on('connection', client => {
     console.log("有客户连接成功.........................................");
     client.on('message', async msg => {
-      console.log("客户端发送数据给客户端了：" + msg);
       // 前端传来的是字符串，将他转化成对象
       let payLoad = JSON.parse(msg)
       // 获取参数中的action，并做判断

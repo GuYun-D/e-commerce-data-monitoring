@@ -20,7 +20,7 @@ export default {
       currentIndex: 0,
 
       // 文字大小
-      titleFontSize: 0,
+      titleFontSize: 0
     }
   },
   methods: {
@@ -37,28 +37,28 @@ export default {
           {
             type: 'pie',
             label: {
-              show: false,
+              show: false
             },
             emphasis: {
               label: {
-                show: true,
+                show: true
               },
               labelLine: {
-                show: false,
+                show: false
               },
             },
-          },
+          }
         ],
 
         title: {
           text: '| 热销商品的占比',
           left: 20,
-          top: 20,
+          top: 20
         },
 
         legend: {
           top: '15%',
-          icon: 'circle',
+          icon: 'circle'
         },
 
         tooltip: {
@@ -79,7 +79,7 @@ export default {
               `
             })
             return retStr
-          },
+          }
         },
       }
       this.chartsInstance.setOption(initOption)
@@ -99,7 +99,7 @@ export default {
           name: item.name,
           value: item.value,
           // 为了在tooltip中得到这个三级分类
-          children: item.children,
+          children: item.children
         }
       })
       // 图例数据
@@ -117,7 +117,7 @@ export default {
 
         legend: {
           data: legendData,
-        },
+        }
       }
       this.chartsInstance.setOption(dataOption)
     },
@@ -127,14 +127,14 @@ export default {
         title: {
           textStyle: {
             fontSize: this.titleFontSize,
-          },
+          }
         },
 
         series: [
           {
             radius: this.titleFontSize * 4.5,
             center: ['50%', '60%'],
-          },
+          }
         ],
 
         legend: {
@@ -142,9 +142,9 @@ export default {
           itemHeight: this.titleFontSize ,
           itemGap: this.titleFontSize / 2,
           textStyle: {
-            fontSize: this.titleFontSize / 2,
-          },
-        },
+            fontSize: this.titleFontSize / 2
+          }
+        }
       }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
@@ -193,7 +193,7 @@ export default {
       }
     },
 
-    ...mapState(['theme']),
+    ...mapState(['theme'])
   },
 
   watch: {
@@ -206,12 +206,12 @@ export default {
       this.screenAdapter()
       // 更新图表
       this.updataChart()
-    },
+    }
   },
 
   created() {
     this.$socket.registerCallBack('hotproductData', this.getData)
-  },
+  }
 }
 </script>
 

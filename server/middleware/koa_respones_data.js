@@ -4,7 +4,6 @@ const fileUtils = require("../utils/files_utils")
 // 处理业务逻辑中间件
 module.exports = async (ctx, next) => {
     const url = ctx.request.url
-    console.log(url);
     let filePath = url.replace('/api', '')
     filePath = "../data" + filePath + ".json"
     filePath = path.join(__dirname, filePath)
@@ -20,8 +19,6 @@ module.exports = async (ctx, next) => {
 
         ctx.response.body = JSON.stringify(erroeMessage)
     }
-
-    console.log("真正的路径" + filePath);
     // 读取文件内容
     await next()
 }

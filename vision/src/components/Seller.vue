@@ -23,7 +23,7 @@ export default {
       // 一共有多少页
       totalPage: 0,
       // 定时器id
-      timerID: null,
+      timerID: null
     }
   },
 
@@ -35,14 +35,14 @@ export default {
         action: 'getData',
         socketType: 'sellerData',
         chartName: 'seller',
-        value: '',
+        value: ''
       })
       // 对图标初始化配置的控制
       const initOption = {
         title: {
           text: '| 商家销售统计',
           top: 20,
-          left: 20,
+          left: 20
         },
 
         grid: {
@@ -51,14 +51,14 @@ export default {
           right: '6%',
           bottom: '3%',
           // 设置坐标轴的位置，是不包括文字的，需要配置属性containLabel: true
-          containLabel: true,
+          containLabel: true
         },
 
         xAxis: {
-          type: 'value',
+          type: 'value'
         },
         yAxis: {
-          type: 'category',
+          type: 'category'
         },
 
         tooltip: {
@@ -68,9 +68,9 @@ export default {
             // 层级设置
             z: 0,
             lineStyle: {
-              color: '#2d3443',
-            },
-          },
+              color: '#2d3443'
+            }
+          }
         },
 
         series: [
@@ -80,24 +80,24 @@ export default {
               show: true,
               position: 'right',
               textStyle: {
-                color: 'white',
-              },
+                color: 'white'
+              }
             },
             itemStyle: {
               // 指明方向
               color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 {
                   offset: 0,
-                  color: '#5052ee',
+                  color: '#5052ee'
                 },
                 {
                   offset: 1,
-                  color: '#c701ff',
-                },
-              ]),
-            },
-          },
-        ],
+                  color: '#c701ff'
+                }
+              ])
+            }
+          }
+        ]
       }
       this.chartInstance.setOption(initOption)
 
@@ -114,7 +114,6 @@ export default {
     getData(ret) {
       // http://localhost: 3000/api/seller
       // const { data: ret } = await this.$http.get('/seller')
-      console.log(ret)
       this.allData = ret
       // 对数组排序
       this.allData.sort(function (a, b) {
@@ -142,14 +141,14 @@ export default {
 
       const dataOption = {
         yAxis: {
-          data: sellerNames,
+          data: sellerNames
         },
 
         series: [
           {
-            data: sellerValues,
-          },
-        ],
+            data: sellerValues
+          }
+        ]
       }
 
       this.chartInstance.setOption(dataOption)
@@ -174,38 +173,36 @@ export default {
       // this.$refs.seller_ref.offsetWidth
       // 当屏幕发生变化时，动态修改文字的大小
       const titleFontsize = (this.$refs.seller_ref.offsetWidth / 100) * 3.6
-      console.log(titleFontsize)
-
       const adapterOption = {
         title: {
           textStyle: {
-            fontSize: titleFontsize,
-          },
+            fontSize: titleFontsize
+          }
         },
 
         tooltip: {
           axisPointer: {
             lineStyle: {
-              with: titleFontsize,
-            },
-          },
+              with: titleFontsize
+            }
+          }
         },
 
         series: [
           {
             barWidth: titleFontsize,
             itemStyle: {
-              barBorderRadius: [0, titleFontsize / 2, titleFontsize / 2, 0],
-            },
-          },
-        ],
+              barBorderRadius: [0, titleFontsize / 2, titleFontsize / 2, 0]
+            }
+          }
+        ]
       }
 
       this.chartInstance.setOption(adapterOption)
 
       // 手动调用图表对象的resize，才能实现效果
       this.chartInstance.resize()
-    },
+    }
   },
 
   // dom加载完毕的生命周期函数
@@ -219,8 +216,8 @@ export default {
 
   // 组件被销毁的生命周期
   destoryed() {
-    clearInterval(timerID)
-    window.removeEventListener('resize', screenAdapter)
+    clearInterval(this.timerID)
+    window.removeEventListener('resize', this.screenAdapter)
     this.$socket.unregisterCallBack('sellerData')
   },
 
@@ -229,7 +226,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['theme']),
+    ...mapState(['theme'])
   },
 
   watch: {
@@ -242,8 +239,8 @@ export default {
       this.screenAdapter()
       // 更新图表
       this.updataChart()
-    },
-  },
+    }
+  }
 }
 </script>
 

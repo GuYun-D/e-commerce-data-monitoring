@@ -16,7 +16,7 @@ export default {
       startValue: 0,
       endValue: 9,
       // 定时器
-      timerId: '',
+      timerId: ''
     }
   },
   methods: {
@@ -26,36 +26,36 @@ export default {
         action: 'getData',
         socketType: 'rankData',
         chartName: 'rank',
-        value: '',
+        value: ''
       })
       const initOption = {
         title: {
           text: '| 地区销售排行',
           left: 20,
-          top: 20,
+          top: 20
         },
         xAxis: {
-          type: 'category',
+          type: 'category'
         },
         yAxis: {
-          type: 'value',
+          type: 'value'
         },
         series: [
           {
-            type: 'bar',
-          },
+            type: 'bar'
+          }
         ],
         grid: {
           top: '40%',
           left: '5%',
           right: '5%',
           bottom: '5%',
-          containLabel: true,
+          containLabel: true
         },
 
         tooltip: {
-          show: true,
-        },
+          show: true
+        }
       }
 
       this.chartsInstance.setOption(initOption)
@@ -81,7 +81,7 @@ export default {
       const colorArr = [
         ['#0ba82c', '#4ff778'],
         ['#2e72bf', '#23e5e5'],
-        ['#5052ee', '#ab6ee5'],
+        ['#5052ee', '#ab6ee5']
       ]
       // 所有省份数据
       const provinceArr = this.allData.map((item) => {
@@ -99,10 +99,10 @@ export default {
         dataZoom: {
           show: false,
           startValue: this.startValue,
-          endValue: this.endValue,
+          endValue: this.endValue
         },
         xAxis: {
-          data: provinceArr,
+          data: provinceArr
         },
         series: [
           {
@@ -121,17 +121,17 @@ export default {
                 return new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: targetColorArr[0],
+                    color: targetColorArr[0]
                   },
                   {
                     offset: 1,
-                    color: targetColorArr[1],
-                  },
+                    color: targetColorArr[1]
+                  }
                 ])
-              },
-            },
-          },
-        ],
+              }
+            }
+          }
+        ]
       }
       this.chartsInstance.setOption(dataOption)
     },
@@ -141,17 +141,17 @@ export default {
         title: {
           textStyle: {
             fontSize: titleFontSize,
-          },
+          }
         },
 
         series: [
           {
             barWidth: titleFontSize,
             itemStyle: {
-              barBorderRadius: [titleFontSize / 2, titleFontSize / 2, 0, 0],
-            },
-          },
-        ],
+              barBorderRadius: [titleFontSize / 2, titleFontSize / 2, 0, 0]
+            }
+          }
+        ]
       }
       this.chartsInstance.setOption(adapteeOption)
       this.chartsInstance.resize()
@@ -171,7 +171,7 @@ export default {
         }
         this.updataChart()
       }, 2000)
-    },
+    }
   },
   mounted() {
     this.initCharts()
@@ -190,7 +190,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['theme']),
+    ...mapState(['theme'])
   },
 
   watch: {
@@ -203,8 +203,8 @@ export default {
       this.screenAdapter()
       // 更新图表
       this.updataChart()
-    },
-  },
+    }
+  }
 }
 </script>
 
