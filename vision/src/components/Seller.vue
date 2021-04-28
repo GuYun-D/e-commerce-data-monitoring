@@ -8,6 +8,9 @@
 </template>
 
 <script>
+// 导入vuex
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -27,12 +30,12 @@ export default {
   methods: {
     // 初始话echarts对象
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.seller_ref, 'chalk')
+      this.chartInstance = this.$echarts.init(this.$refs.seller_ref, this.theme)
       this.$socket.send({
-        "action": 'getData',
-        "socketType": 'sellerData',
-        "chartName": 'seller',
-        "value": ''
+        action: 'getData',
+        socketType: 'sellerData',
+        chartName: 'seller',
+        value: '',
       })
       // 对图标初始化配置的控制
       const initOption = {
@@ -177,13 +180,13 @@ export default {
         title: {
           textStyle: {
             fontSize: titleFontsize,
-          }
+          },
         },
 
         tooltip: {
           axisPointer: {
             lineStyle: {
-              with: titleFontsize
+              with: titleFontsize,
             },
           },
         },
@@ -221,9 +224,26 @@ export default {
     this.$socket.unregisterCallBack('sellerData')
   },
 
-  created(){
+  created() {
     this.$socket.registerCallBack('sellerData', this.getData)
-  }
+  },
+
+  computed: {
+    ...mapState(['theme']),
+  },
+
+  watch: {
+    theme() {
+      // 销毁当前的图表
+      this.chartInstance.dispose()
+      // 刷新主题
+      this.initChart()
+      // 重新适配
+      this.screenAdapter()
+      // 更新图表
+      this.updataChart()
+    },
+  },
 }
 </script>
 

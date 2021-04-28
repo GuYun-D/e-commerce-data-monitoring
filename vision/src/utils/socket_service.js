@@ -78,9 +78,7 @@ export default class SocketService {
         } else if (action === 'fullScreen') {
           // 执行注册的回调函数
           this.callbackMapping[socketType].call(this, recvData)
-        } else if (action === 'themeChange') {
-
-        }
+        } 
       }
     }
   }

@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -19,7 +21,7 @@ export default {
   },
   methods: {
     initCharts() {
-      this.chartsInstance = this.$echarts.init(this.$refs.rank_ref, 'chalk')
+      this.chartsInstance = this.$echarts.init(this.$refs.rank_ref, this.theme)
       this.$socket.send({
         action: 'getData',
         socketType: 'rankData',
@@ -185,6 +187,23 @@ export default {
 
   created() {
     this.$socket.registerCallBack('rankData', this.getData)
+  },
+
+  computed: {
+    ...mapState(['theme']),
+  },
+
+  watch: {
+    theme() {
+      // 销毁当前的图表
+      this.chartsInstance.dispose()
+      // 刷新主题
+      this.initCharts()
+      // 重新适配
+      this.screenAdapter()
+      // 更新图表
+      this.updataChart()
+    },
   },
 }
 </script>

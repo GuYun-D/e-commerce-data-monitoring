@@ -6,6 +6,8 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
+
 // 导入工具方法，用于处理中————>英
 import { getProvinceMapInfo } from '../utils/map_utils'
 export default {
@@ -18,7 +20,7 @@ export default {
   },
   methods: {
     async initCharts() {
-      this.chartsInstance = this.$echarts.init(this.$refs.map_ref, 'chalk')
+      this.chartsInstance = this.$echarts.init(this.$refs.map_ref, this.theme)
       this.$socket.send({
         "action": 'getData',
         "socketType": 'mapData',
@@ -160,6 +162,23 @@ export default {
 
   created() {
     this.$socket.registerCallBack('mapData', this.getData)
+  },
+
+  computed: {
+    ...mapState(['theme']),
+  },
+
+  watch: {
+    theme() {
+      // 销毁当前的图表
+      this.chartsInstance.dispose()
+      // 刷新主题
+      this.initCharts()
+      // 重新适配
+      this.screenAdapter()
+      // 更新图表
+      this.updataChart()
+    },
   },
 }
 </script>

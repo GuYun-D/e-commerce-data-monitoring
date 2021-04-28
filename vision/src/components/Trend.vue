@@ -12,6 +12,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { getThemeValue } from '../utils/theme_utils'
+
 export default {
   data() {
     return {
@@ -35,7 +38,7 @@ export default {
 
   methods: {
     initCharts() {
-      this.chartsInstance = this.$echarts.init(this.$refs.trend_ref, 'chalk')
+      this.chartsInstance = this.$echarts.init(this.$refs.trend_ref, this.theme)
       // 向后端发送数据
       this.$socket.send({
         "action": 'getData',
@@ -178,6 +181,7 @@ export default {
       }
     },
 
+
     showTitle() {
       if (!this.allData) {
         return ''
@@ -190,6 +194,7 @@ export default {
     comStyle() {
       return {
         fontSize: this.titleFontSize + 'px',
+        color: getThemeValue(this.theme).titleColor
       }
     },
 
@@ -198,6 +203,21 @@ export default {
       return {
         marginLeft: this.titleFontSize - 20 + 'px',
       }
+    },
+
+    ...mapState(['theme']),
+  },
+
+  watch: {
+    theme() {
+      // 销毁当前的图表
+      this.chartsInstance.dispose()
+      // 刷新主题
+      this.initCharts()
+      // 重新适配
+      this.screenAdapter()
+      // 更新图表
+      this.updataChart()
     },
   },
 

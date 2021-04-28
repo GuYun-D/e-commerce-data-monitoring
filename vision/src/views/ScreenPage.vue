@@ -1,15 +1,12 @@
 <template>
-  <div class="screen-container">
+  <div class="screen-container" :style="containerStyle">
     <header class="screen-header">
       <div>
-        <img src="/static/img/header_border_dark.png" alt="" />
+        <img :src="headerSrc" alt="" />
       </div>
-      <span class="logo">
-        <!-- <img src="/static/img/logo_dark.png" alt="" /> -->
-      </span>
       <span class="title">电商平台实时监控系统</span>
       <div class="title-right">
-        <img src="/static/img/qiehuan_dark.png" class="qiehuan" alt="" />
+        <img :src="themeSrc" class="qiehuan" alt="" @click="handleChangeTheme" />
         <span class="datatime">2021-01-01 00:00:00</span>
       </div>
     </header>
@@ -74,6 +71,8 @@ import Map from '@/components/Map.vue'
 import Rank from '@/components/Rank.vue'
 import Hot from '@/components/Hot.vue'
 import Stock from '@/components/Stock.vue'
+import { mapState } from 'vuex'
+import { getThemeValue } from '../utils/theme_utils'
 
 export default {
   data() {
@@ -133,6 +132,12 @@ export default {
         this.$refs[chartName].screenAdapter()
       })
     },
+
+    // 切换皮肤
+
+    handleChangeTheme() {
+      this.$store.commit('changeTheme')
+    },
   },
 
   // 组件注册
@@ -143,6 +148,23 @@ export default {
     Seller,
     Stock,
     Trend,
+  },
+
+  computed: {
+    ...mapState(['theme']),
+    headerSrc() {
+      return '/static/img/' + getThemeValue(this.theme).headerBorderSrc
+    },
+    themeSrc() {
+      return '/static/img/' + getThemeValue(this.theme).themeSrc
+    },
+    // 背景颜色
+    containerStyle(){
+      return {
+        backgroundColor: getThemeValue(this.theme).backgroundColor,
+        color: getThemeValue(this.theme).titleColor
+      }
+    }
   },
 }
 </script>
